@@ -1,0 +1,67 @@
+<section>
+  <div class="content">
+    <h1>Pet Klin Rações</h1>
+    <div class="note">
+      <p class="note-paragraph">
+        Entregamos nas regiões Tatuqara, Pinheirinho, ...
+      </p>
+      <p class="note-paragraph">
+        Frete grátis a partir de R$ 50,00
+      </p>
+      <p class="note-paragraph">
+        Pedidos até as 10h, entregas entre 11h~13h do mesmo dia
+      </p>
+      <p class="note-paragraph">
+        Pedidos até as 17h, entregas às 18h~20h do mesmo dia
+      </p>
+    </div>
+    <form>
+      <div class="form-item">
+        <label for="category-select">Ração para</label>
+        <select id="category-select" (change)="onCategoryChange($event)">
+          @for(category of categoryOptions; track category) {
+            <option [value]="category">{{category.toString()}}</option>
+          }
+        </select>
+      </div>
+
+      <div class="form-item">
+        <label for="brand-select">Marca</label>
+        <select id="brand-select" (change)="onBrandChange($event)">
+          @for(brand of getBrandsByCategory(); track brand) {
+            <option [value]="brand.value">{{brand.label}}</option>
+          }
+        </select>
+      </div>
+
+      <div class="tab">
+        @for (weightOption of weightOptions; track $index) {
+          <button (click)="selectWeightMethod(weightOption)">{{weightOption}}</button>
+        }
+      </div>
+
+      @if(selectedWeightMethod == "Saco") {
+        <div class="form-item">
+          <label for="brand-select">Peso do saco</label>
+          <select id="bag-weight-select" (change)="onBagWeightChange($event)">
+            @for(bagWeight of getBagOptions(); track bagWeight) {
+              <option [value]="bagWeight.weight">{{bagWeight.weight}} KG por {{toCurrency(bagWeight.price)}}</option>
+            }
+          </select>
+          <label for="bag-quantity-input">Quantidade de sacos</label>
+          <input id="bag-quantity-input" type="number" value="1">
+        </div>
+
+        <p>{{1}}x Saco(s) de {{toCurrency(selectedBag.price)}}</p>
+        <p>Subtotal: {{toCurrency(1 * selectedBag.price)}}</p>
+      }
+
+      @if(selectedWeightMethod == "Granel") {
+        <h2>GRANEL</h2>
+      }
+    </form>
+  </div>
+  <div class="footer-buttons">
+    <button (click)="sendOrder()">Confirmar</button>
+  </div>
+</section>

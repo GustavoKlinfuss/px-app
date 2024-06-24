@@ -1,0 +1,60 @@
+:host {
+  border: solid 1px black;
+  flex: 1;
+}
+
+.content {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.note {
+  border: solid 1px black;
+}
+
+.note-paragraph {
+  margin: 5px;
+  font-size: 1rem;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+
+  select {
+    flex: 1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-size: 1rem;
+  }
+  
+  label {
+    margin-bottom: 0px;
+  }
+}
+
+.tab {
+  border: 1px solid black;
+  display: flex;
+
+  button {
+    background-color: inherit;
+    border: 1px solid black;
+    float: left;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    flex: 1;
+  }
+
+  button:hover {
+    background-color: yellow;
+  }
+
+  button.active {
+    background-color: red;
+  }
+}
