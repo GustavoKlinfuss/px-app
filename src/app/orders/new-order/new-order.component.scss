@@ -3,11 +3,12 @@
   flex: 1;
 }
 
-.content {
-  margin: 20px;
+.new-order-content {
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: 100%;
 }
 
 .note {
