@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { OrdersService } from '../orders.service';
-import { Option, Bag, ETipoAnimal, ETipoPesagem, Catalog } from '../order.models';
+import { OrdersService } from '../shared/orders.service';
+import { Option, Bag, ETipoAnimal, ETipoPesagem, Catalog } from '../shared/order.models';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
