@@ -1,141 +1,108 @@
 import { Component } from '@angular/core';
-
-enum ECategoria
-{
-  Indefinido = "Indefinido",
-  Cachorro = "Cachorro",
-  Gato = "Gato",
-  Peixe = "Peixe",
-  Passaro = "Pássaro"
-}
-
-enum ETipoPesagem
-{
-  Indefinido = "Indefinido",
-  Saco = "Saco",
-  Granel = "Granel"
-}
-
-export interface Option {
-  category: ECategoria,
-  value: string,
-  label: string,
-  bags: Bag[]
-}
-
-export interface Bag {
-  weight: number,
-  price: number
-}
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { OrdersService } from '../orders.service';
+import { Option, Bag, ETipoAnimal, ETipoPesagem, Catalog } from '../order.models';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-new-order',
   standalone: true,
-  imports: [],
+  imports: [
+    ReactiveFormsModule
+  ],
   templateUrl: './new-order.component.html',
   styleUrl: './new-order.component.scss'
 })
 export class NewOrderComponent {
-  formatter = new Intl.NumberFormat('pt-BR', {
-    style: 'currency',
-    currency: 'BRL',
-  });
+  private _catalog?: Array<Catalog>;
+  
+  public form = new FormGroup({
+    petType: new FormControl(ETipoAnimal.Cachorro),
+    product: new FormControl<string|null>(null),
+    weightType: new FormControl<ETipoPesagem|null>(null),
+    bag: new FormGroup({
+      weight: new FormControl<number|null>(null),
+      price: new FormControl<number|null>(null),
+    }),
+    bagQuantity: new FormControl<number | null>(null),
+    bulkQuantity: new FormControl<number | null>(null)
+  })
 
-  public categoryOptions = [ ECategoria.Cachorro, ECategoria.Gato, ECategoria.Passaro, ECategoria.Peixe ];
-  public weightOptions = [ ETipoPesagem.Saco, ETipoPesagem.Granel ]
-
-  private _generalOptions : Array<Option> = [
-    { 
-      category: ECategoria.Cachorro, 
-      value: 'special-dog-carne',
-      label: 'Special Dog - Carne',
-      bags: [
-        { weight: 2, price: 12.4 },
-        { weight: 10, price: 50.4 }
-      ] 
-    },
-    { 
-      category: ECategoria.Cachorro,
-      value: 'special-dog-vegetais',
-      label: 'Special Dog - Vegetais', bags: [] },
-    { 
-      category: ECategoria.Cachorro,
-      value: 'special-dog-filhotes',
-      label: 'Special Dog - Filhotes', bags: [] },
-    { 
-      category: ECategoria.Cachorro,
-      value: 'golden-castrados',
-      label: 'Golden - Castrados', bags: [] },
-    { 
-      category: ECategoria.Cachorro,
-      value: 'golden-adultos',
-      label: 'Golden - Adultos', bags: [] },
-    { 
-      category: ECategoria.Cachorro,
-      value: 'golden-filhotes',
-      label: 'Golden - Filhotes', bags: [] },
-    { 
-      category: ECategoria.Gato,
-      value: 'golden-gatos',
-      label: 'Golden - Gatos', bags: [] },
-    { 
-      category: ECategoria.Passaro,
-      value: 'golden-passaros',
-      label: 'Golden - Pássaros', bags: [] },
-    { 
-      category: ECategoria.Peixe,
-      value: 'golden-passaros',
-      label: 'Golden - Peixes', bags: [] }
-  ];
-
-  selectedCategory: ECategoria = this.categoryOptions[0];
-  selectedBrand: string | null = this.getBrandsByCategory()[0].value;
-  selectedWeightMethod: ETipoPesagem = this.weightOptions[0];
-  selectedBag: Bag = this.getBagOptions()[0];
-  selectedBulkInKilograms: number = 1; 
-
-  getBrandsByCategory() : Option[] {
-    return this._generalOptions.filter(brand => brand.category === this.selectedCategory);
+  constructor(ordersService: OrdersService){
+    ordersService
+      .getCatalogToOrder()
+      .subscribe(response => {
+        if (response instanceof HttpErrorResponse)
+          return;
+        this.form.controls.product.setValue(response[0]?.products[0]?.label)
+        this._catalog = response;
+        console.log({catalog: this._catalog})
+      });
   }
 
-  getBagOptions() : Array<Bag> {
-    return this._generalOptions.find(options =>
-                                     options.category === this.selectedCategory
-                                  && options.value == this.selectedBrand)!.bags;
+  public weightOptions = [ ETipoPesagem.Saco, ETipoPesagem.Granel ];
+
+  getCatalog(): Array<Catalog> | undefined {
+    return this._catalog;
   }
 
-  onCategoryChange(event: Event){
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedCategory = ECategoria[selectElement.value as keyof typeof ECategoria];
+  getPetTypes(): Array<ETipoAnimal> {
+    return this._catalog!.map(x => x.petType);
   }
 
-  onBrandChange(event: Event){
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedBrand = selectElement.value;
+  getProducts() : Option[] {
+    return this._catalog!.find(product => product.petType === this.form.controls.petType.value)!.products;
   }
 
-  onBagWeightChange(event: Event){
-    const selectElement = event.target as HTMLSelectElement;
-    this.selectedBag = this.getBagOptions().find(x => x.weight == Number(selectElement.value))!;
-  }
-
-  selectWeightMethod(value: string) {
-    this.selectedWeightMethod = ETipoPesagem[value as keyof typeof ETipoPesagem];
+  getBagOptions() : Array<Bag> | undefined {
+    const byPetType = this._catalog!.find(catalog => catalog.petType === this.form.controls.petType.value);
+    return byPetType!.products.find(x => x.label == this.form.controls.product.value)?.bags;
   }
 
   toCurrency(value: number) : string {
-    return this.formatter.format(value);
+    const formatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+    return formatter.format(value);
   }
 
-  sendOrder() {
-    var order = {
-      category: this.selectedCategory,
-      brand: this._generalOptions.find(x => x.value == this.selectedBrand)?.label,
-      weightMethod: this.selectedWeightMethod,
-      bag: this.selectedBag,
-      bulkInKilograms: this.selectedBulkInKilograms
-    }
+  onSubmit(){
+    console.log({ord: this.form})
+    alert(JSON.stringify(this.form.getRawValue(), null, '    '));
+  }
 
-    alert(JSON.stringify(order, null, ' '));
+  selectBagWeightType() {
+    this.form.controls.weightType.setValue(ETipoPesagem.Saco);
+    this.form.controls.bagQuantity.setValue(1);
+  }
+
+  selectBulkWeightType() {
+    this.form.controls.bag.reset();
+    this.form.controls.weightType.setValue(ETipoPesagem.Granel);
+  }
+
+  getSumFromBags(): string | null {
+    if (!this.form.controls.bagQuantity.value || !this.form.controls.bag.value){
+      console.log('sem valor garaio');
+      return null;
+    }
+    console.log(this.form);
+
+    var x = this.toCurrency(this.form.controls.bagQuantity.value * this.form.controls.bag.value!.price!);
+    console.log('valor' + x + 'caraio');
+    return x;
+  }
+
+  getBulkPriceFromSelectedProduct(): number|undefined {
+    return this.getProducts().find(x => x.label == this.form.value.product)?.bulkPrice;
+  }
+
+  onBagSelect(event: Event) {
+    const weight = Number((event.target as HTMLSelectElement).value);
+    this.form.controls.bag.patchValue({
+      weight: weight,
+      price: this.getBagOptions()?.find(x => x.weight === weight)?.price
+    })
   }
 }
