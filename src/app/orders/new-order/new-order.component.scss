@@ -36,26 +36,8 @@
   }
 }
 
-.tab {
-  border: 1px solid black;
+.footer-buttons {
   display: flex;
-
-  button {
-    background-color: inherit;
-    border: 1px solid black;
-    float: left;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    flex: 1;
-  }
-
-  button:hover {
-    background-color: yellow;
-  }
-
-  button.active {
-    background-color: red;
-  }
+  flex-direction: row;
+  justify-content: flex-end;
 }

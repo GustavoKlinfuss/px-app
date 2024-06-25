@@ -35,47 +35,41 @@
       </div>
 
       <div class="form-item">
-        <label for="product-select">Tipo de pesagem</label>
-        <div class="tab">
-          <button type="button" (click)="selectBagWeightType()">Saco</button>
-          <button type="button" (click)="selectBulkWeightType()">Granel</button>
-        </div>
+        <mat-tab-group (selectedIndexChange)="selectWeightType($event)">
+          <mat-tab [label]="weightOptions[0]">
+            <div class="form-item" formGroupName="bag">
+              <label for="weight">Peso do saco</label>
+              <select (change)="onBagSelect($event)" id="weight" formControlName="weight">
+                @for(bag of getBagOptions(); track bag) {
+                  <option [value]="bag.weight">{{bag.weight}} KG por {{toCurrency(bag.price)}}</option>
+                }
+              </select>
+            </div>
+              
+            <div class="form-item">
+              <label for="bag-quantity-input">Quantidade de sacos</label>
+              <input id="bag-quantity-input" type="number" value="1" formControlName="bagQuantity">
+            </div>
+    
+            <p>{{form.value.bag?.weight && form.value.bagQuantity
+                ? form.value.bagQuantity + 'x - Saco de ' + form.value.bag!.weight + 'KG ' + toCurrency(form.value.bag!.price!)
+                : '-'}}
+            </p>
+            <p>Subtotal: {{form.value.bag?.price && form.value.bagQuantity ? getSumFromBags() : '-'}}</p>
+          </mat-tab>
+          <mat-tab [label]="weightOptions[1]">
+            <div class="form-item">
+              <label for="bulk-quantity">Quantidade em KG</label>
+              <input id="bulk-quantity" type="number" value="1" formControlName="bulkQuantity">
+            </div>
+    
+            <p>Subtotal: {{form.value.bulkQuantity && getBulkPriceFromSelectedProduct() ? toCurrency(form.value.bulkQuantity! * getBulkPriceFromSelectedProduct()!) : '-'}}</p>
+          </mat-tab>
+        </mat-tab-group>
       </div>
-
-      @if(form.value.weightType == "Saco") {
-        <div class="form-item" formGroupName="bag">
-          <label for="weight">Peso do saco</label>
-          <select (change)="onBagSelect($event)" id="weight" formControlName="weight">
-            @for(bag of getBagOptions(); track bag) {
-              <option [value]="bag.weight">{{bag.weight}} KG por {{toCurrency(bag.price)}}</option>
-            }
-          </select>
-        </div>
-          
-        <div class="form-item">
-          <label for="bag-quantity-input">Quantidade de sacos</label>
-          <input id="bag-quantity-input" type="number" value="1" formControlName="bagQuantity">
-        </div>
-
-        <p>
-          {{form.value.bag?.weight && form.value.bagQuantity
-            ? form.value.bagQuantity + 'x - Saco de ' + form.value.bag!.weight + 'KG ' + toCurrency(form.value.bag!.price!)
-            : '-'}}
-        </p>
-        <p>Subtotal: {{form.value.bag?.price && form.value.bagQuantity ? getSumFromBags() : '-'}}</p>
-      }
-
-      @if(form.value.weightType == "Granel") {
-        <div class="form-item">
-          <label for="bulk-quantity">Quantidade em KG</label>
-          <input id="bulk-quantity" type="number" value="1" formControlName="bulkQuantity">
-        </div>
-
-        <p>Subtotal: {{form.value.bulkQuantity && getBulkPriceFromSelectedProduct() ? toCurrency(form.value.bulkQuantity! * getBulkPriceFromSelectedProduct()!) : '-'}}</p>
-      }
     }
     <div class="footer-buttons">
-      <button type="submit">Confirmar com submit</button>
+      <button mat-stroked-button type="submit">Continuar</button>
     </div>
   </form>
 </section>

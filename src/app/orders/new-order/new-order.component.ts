@@ -3,12 +3,16 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OrdersService } from '../shared/orders.service';
 import { Option, Bag, ETipoAnimal, ETipoPesagem, Catalog } from '../shared/order.models';
 import { HttpErrorResponse } from '@angular/common/http';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-new-order',
   standalone: true,
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatTabsModule,
+    MatButtonModule
   ],
   templateUrl: './new-order.component.html',
   styleUrl: './new-order.component.scss'
@@ -36,6 +40,7 @@ export class NewOrderComponent {
           return;
         this.form.controls.product.setValue(response[0]?.products[0]?.label)
         this._catalog = response;
+        this.selectWeightType(0);
         console.log({catalog: this._catalog})
       });
   }
@@ -72,26 +77,10 @@ export class NewOrderComponent {
     alert(JSON.stringify(this.form.getRawValue(), null, '    '));
   }
 
-  selectBagWeightType() {
-    this.form.controls.weightType.setValue(ETipoPesagem.Saco);
-    this.form.controls.bagQuantity.setValue(1);
-  }
-
-  selectBulkWeightType() {
-    this.form.controls.bag.reset();
-    this.form.controls.weightType.setValue(ETipoPesagem.Granel);
-  }
-
   getSumFromBags(): string | null {
-    if (!this.form.controls.bagQuantity.value || !this.form.controls.bag.value){
-      console.log('sem valor garaio');
+    if (!this.form.controls.bagQuantity.value || !this.form.controls.bag.value)
       return null;
-    }
-    console.log(this.form);
-
-    var x = this.toCurrency(this.form.controls.bagQuantity.value * this.form.controls.bag.value!.price!);
-    console.log('valor' + x + 'caraio');
-    return x;
+    return this.toCurrency(this.form.controls.bagQuantity.value * this.form.controls.bag.value!.price!);
   }
 
   getBulkPriceFromSelectedProduct(): number|undefined {
@@ -104,5 +93,19 @@ export class NewOrderComponent {
       weight: weight,
       price: this.getBagOptions()?.find(x => x.weight === weight)?.price
     })
+  }
+
+  selectWeightType($event: number) {
+    const tipoPesagem = this.weightOptions[$event];
+    this.form.controls.weightType.setValue(tipoPesagem);
+    if (tipoPesagem == ETipoPesagem.Granel){
+      this.form.controls.bag.reset();
+      this.form.controls.bagQuantity.reset();
+    }
+    else{
+      this.form.controls.bulkQuantity.reset();
+      this.form.controls.bagQuantity.setValue(1);
+    }
+      
   }
 }
