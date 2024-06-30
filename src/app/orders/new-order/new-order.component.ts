@@ -45,7 +45,7 @@ export class NewOrderComponent {
       });
   }
 
-  public weightOptions = [ ETipoPesagem.Saco, ETipoPesagem.Granel ];
+  public weightOptions = [ ETipoPesagem.Saco, ETipoPesagem.AGranel ];
 
   getCatalog(): Array<Catalog> | undefined {
     return this._catalog;
@@ -98,7 +98,7 @@ export class NewOrderComponent {
   selectWeightType($event: number) {
     const tipoPesagem = this.weightOptions[$event];
     this.form.controls.weightType.setValue(tipoPesagem);
-    if (tipoPesagem == ETipoPesagem.Granel){
+    if (tipoPesagem == ETipoPesagem.AGranel){
       this.form.controls.bag.reset();
       this.form.controls.bagQuantity.reset();
     }

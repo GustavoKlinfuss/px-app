@@ -11,7 +11,7 @@ export enum ETipoPesagem
 {
   Indefinido = "Indefinido",
   Saco = "Saco",
-  Granel = "Granel"
+  AGranel = "A Granel"
 }
 
 export interface Catalog {

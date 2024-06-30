@@ -59,6 +59,8 @@
           </mat-tab>
           <mat-tab [label]="weightOptions[1]">
             <div class="form-item">
+              <p>Preço por KG: {{getBulkPriceFromSelectedProduct() ? toCurrency(getBulkPriceFromSelectedProduct()!) : '0'}}</p>
+
               <label for="bulk-quantity">Quantidade em KG</label>
               <input id="bulk-quantity" type="number" value="1" formControlName="bulkQuantity">
             </div>
