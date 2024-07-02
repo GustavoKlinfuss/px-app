@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { NewOrderComponent } from './orders/new-order/new-order.component';
+import { OrdersComponent } from './orders/orders.component';
 
 export const routes: Routes = [
   {
@@ -10,5 +11,9 @@ export const routes: Routes = [
   {
     path: 'pedidos/novo',
     component: NewOrderComponent
+  },
+  {
+    path: 'pedidos',
+    component: OrdersComponent
   }
 ];

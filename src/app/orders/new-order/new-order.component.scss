@@ -4,14 +4,6 @@
   overflow: auto;
 }
 
-.new-order-content {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  height: 100%;
-}
-
 .note {
   border: solid 1px black;
 }
@@ -24,21 +16,17 @@
 .form-item {
   display: flex;
   flex-direction: column;
-
-  select {
-    flex: 1;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    font-size: 1rem;
-  }
-  
-  label {
-    margin-bottom: 0px;
-  }
 }
 
 .footer-buttons {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+}
+
+mat-select {
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 4px;
+  width: calc(100% - 8px);
 }

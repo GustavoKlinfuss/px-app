@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OrdersService } from '../shared/orders.service';
-import { Option, Bag, ETipoAnimal, ETipoPesagem, Catalog } from '../shared/order.models';
+import { Product, Bag, ETipoAnimal, ETipoPesagem, Catalog, CartItem } from '../shared/order.models';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-new-order',
@@ -12,7 +14,8 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     ReactiveFormsModule,
     MatTabsModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSelectModule
   ],
   templateUrl: './new-order.component.html',
   styleUrl: './new-order.component.scss'
@@ -21,8 +24,8 @@ export class NewOrderComponent {
   private _catalog?: Array<Catalog>;
   
   public form = new FormGroup({
-    petType: new FormControl(ETipoAnimal.Cachorro),
-    product: new FormControl<string|null>(null),
+    petType: new FormControl<ETipoAnimal>(ETipoAnimal.Cachorro),
+    product: new FormControl<Product|null>(null, Validators.required),
     weightType: new FormControl<ETipoPesagem|null>(null),
     bag: new FormGroup({
       weight: new FormControl<number|null>(null),
@@ -32,13 +35,13 @@ export class NewOrderComponent {
     bulkQuantity: new FormControl<number | null>(null)
   })
 
-  constructor(ordersService: OrdersService){
+  constructor(private ordersService: OrdersService, private router: Router){
     ordersService
       .getCatalogToOrder()
       .subscribe(response => {
         if (response instanceof HttpErrorResponse)
           return;
-        this.form.controls.product.setValue(response[0]?.products[0]?.label)
+        this.form.controls.product.setValue(response[0]?.products[0]);
         this._catalog = response;
         this.selectWeightType(0);
         console.log({catalog: this._catalog})
@@ -47,21 +50,13 @@ export class NewOrderComponent {
 
   public weightOptions = [ ETipoPesagem.Saco, ETipoPesagem.AGranel ];
 
-  getCatalog(): Array<Catalog> | undefined {
-    return this._catalog;
-  }
-
-  getPetTypes(): Array<ETipoAnimal> {
-    return this._catalog!.map(x => x.petType);
-  }
-
-  getProducts() : Option[] {
-    return this._catalog!.find(product => product.petType === this.form.controls.petType.value)!.products;
-  }
+  getCatalog(): Array<Catalog> | undefined { return this._catalog; }
+  getPetTypeOptions(): Array<ETipoAnimal> { return this._catalog!.map(x => x.petType); }
+  getProductOptions() : Product[] { return this._catalog!.find(product => product.petType === this.form.controls.petType.value)!.products };
 
   getBagOptions() : Array<Bag> | undefined {
-    const byPetType = this._catalog!.find(catalog => catalog.petType === this.form.controls.petType.value);
-    return byPetType!.products.find(x => x.label == this.form.controls.product.value)?.bags;
+    const catalogByPetType = this._catalog!.find(catalog => catalog.petType === this.form.controls.petType.value);
+    return catalogByPetType!.products.find(product => product == this.form.controls.product.value)?.bags;
   }
 
   toCurrency(value: number) : string {
@@ -72,11 +67,6 @@ export class NewOrderComponent {
     return formatter.format(value);
   }
 
-  onSubmit(){
-    console.log({ord: this.form})
-    alert(JSON.stringify(this.form.getRawValue(), null, '    '));
-  }
-
   getSumFromBags(): string | null {
     if (!this.form.controls.bagQuantity.value || !this.form.controls.bag.value)
       return null;
@@ -84,7 +74,7 @@ export class NewOrderComponent {
   }
 
   getBulkPriceFromSelectedProduct(): number|undefined {
-    return this.getProducts().find(x => x.label == this.form.value.product)?.bulkPrice;
+    return this.getProductOptions().find(x => x == this.form.value.product)?.bulkPrice;
   }
 
   onBagSelect(event: Event) {
@@ -101,11 +91,33 @@ export class NewOrderComponent {
     if (tipoPesagem == ETipoPesagem.AGranel){
       this.form.controls.bag.reset();
       this.form.controls.bagQuantity.reset();
+      this.form.controls.bulkQuantity.setValue(1);
     }
     else{
       this.form.controls.bulkQuantity.reset();
       this.form.controls.bagQuantity.setValue(1);
     }
-      
+  }
+
+  onSubmit(){
+    if (!this.form.valid) {
+      alert('inválido');
+      return;
+    }
+    const raw = this.form.getRawValue();
+    const cartItem: CartItem = {
+      petType: raw.petType!,
+      product: raw.product!,
+      weightType: raw.weightType!,
+      bagQuantity: raw.bagQuantity,
+      bagWeight: raw.bag.weight,
+      bulkQuantity: raw.bulkQuantity
+    }
+    this.ordersService.addItemToCart(cartItem);
+    this.router.navigate(['/pedidos']);
+  }
+
+  converteEmString(arg0: any) {
+    return JSON.stringify(arg0, null, "\n");
   }
 }

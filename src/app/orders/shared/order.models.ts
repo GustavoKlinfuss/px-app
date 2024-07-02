@@ -16,10 +16,11 @@ export enum ETipoPesagem
 
 export interface Catalog {
   petType: ETipoAnimal,
-  products: Array<Option>
+  products: Array<Product>
 }
 
-export interface Option {
+export interface Product {
+  id: number,
   label: string,
   bags: Array<Bag>,
   bulkPrice: number | undefined
@@ -28,4 +29,13 @@ export interface Option {
 export interface Bag {
   weight: number,
   price: number
+}
+
+export interface CartItem {
+  petType: ETipoAnimal,
+  product: Product,
+  weightType: ETipoPesagem,
+  bagWeight: number | null,
+  bagQuantity: number | null,
+  bulkQuantity: number | null
 }

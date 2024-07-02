@@ -1,4 +1,4 @@
-<section class="new-order-content">
+<section class="ncontent">
   <h1>Pet Klin Rações</h1>
   <div class="note">
     <p class="note-paragraph">
@@ -17,59 +17,65 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     @if(getCatalog()) {
       <div class="form-item">
-        <label for="category-select">Ração para</label>
-        <select id="category-select" formControlName="petType">
-          @for(petType of getPetTypes(); track petType) {
-            <option [value]="petType">{{petType.toString()}}</option>
+        <label>Ração para</label>
+        <mat-select formControlName="petType" required>
+          @for(petType of getPetTypeOptions(); track petType) {
+            <mat-option [value]="petType">{{petType.toString()}}</mat-option>
           }
-        </select>
+        </mat-select>
       </div>
 
       <div class="form-item">
-        <label for="product-select">Marca</label>
-        <select id="product-select" formControlName="product">
-          @for(product of getProducts(); track product) {
-            <option [value]="product.label">{{product.label}}</option>
+        <label>Marca</label>
+        <mat-select formControlName="product" required>
+          <mat-option [value]="null">--</mat-option>
+          @for(product of getProductOptions(); track product) {
+            <mat-option [value]="product">{{product.label}}</mat-option>
           }
-        </select>
+        </mat-select>
       </div>
 
-      <div class="form-item">
-        <mat-tab-group (selectedIndexChange)="selectWeightType($event)">
-          <mat-tab [label]="weightOptions[0]">
-            <div class="form-item" formGroupName="bag">
-              <label for="weight">Peso do saco</label>
-              <select (change)="onBagSelect($event)" id="weight" formControlName="weight">
-                @for(bag of getBagOptions(); track bag) {
-                  <option [value]="bag.weight">{{bag.weight}} KG por {{toCurrency(bag.price)}}</option>
-                }
-              </select>
-            </div>
-              
-            <div class="form-item">
-              <label for="bag-quantity-input">Quantidade de sacos</label>
-              <input id="bag-quantity-input" type="number" value="1" formControlName="bagQuantity">
-            </div>
-    
-            <p>{{form.value.bag?.weight && form.value.bagQuantity
-                ? form.value.bagQuantity + 'x - Saco de ' + form.value.bag!.weight + 'KG ' + toCurrency(form.value.bag!.price!)
-                : '-'}}
-            </p>
-            <p>Subtotal: {{form.value.bag?.price && form.value.bagQuantity ? getSumFromBags() : '-'}}</p>
-          </mat-tab>
-          <mat-tab [label]="weightOptions[1]">
-            <div class="form-item">
-              <p>Preço por KG: {{getBulkPriceFromSelectedProduct() ? toCurrency(getBulkPriceFromSelectedProduct()!) : '0'}}</p>
+      <mat-tab-group (selectedIndexChange)="selectWeightType($event)">
+        <!-- SACOS -->
+        <mat-tab [label]="weightOptions[0]">
+          <div class="form-item" formGroupName="bag">
+            <label for="weight">Peso do saco</label>
+            <mat-select formControlName="weight" required>
+              <mat-option [value]="null">--</mat-option>
+              @for(bag of this.form.value.product?.bags; track bag) {
+                <mat-option [value]="bag.weight">{{bag.weight}} KG por {{toCurrency(bag.price)}}</mat-option>
+              }
+            </mat-select>
+          </div>
+            
+          <div class="form-item">
+            <label for="bag-quantity-input">Quantidade de sacos</label>
+            <input id="bag-quantity-input" type="number" value="1" formControlName="bagQuantity">
+          </div>
+  
+          <p>{{form.value.bag?.weight && form.value.bagQuantity
+              ? form.value.bagQuantity + 'x - Saco de ' + form.value.bag!.weight + 'KG ' + toCurrency(form.value.bag!.price!)
+              : '-'}}
+          </p>
+          <p>Subtotal: {{form.value.bag?.price && form.value.bagQuantity ? getSumFromBags() : '-'}}</p>
+        </mat-tab>
+        <!-- A GRANEL -->
+        <mat-tab [label]="weightOptions[1]">
+          <div class="form-item">
+            <p>Preço por KG: {{getBulkPriceFromSelectedProduct() ? toCurrency(getBulkPriceFromSelectedProduct()!) : '0'}}</p>
 
-              <label for="bulk-quantity">Quantidade em KG</label>
-              <input id="bulk-quantity" type="number" value="1" formControlName="bulkQuantity">
-            </div>
-    
-            <p>Subtotal: {{form.value.bulkQuantity && getBulkPriceFromSelectedProduct() ? toCurrency(form.value.bulkQuantity! * getBulkPriceFromSelectedProduct()!) : '-'}}</p>
-          </mat-tab>
-        </mat-tab-group>
-      </div>
+            <label for="bulk-quantity">Quantidade em KG</label>
+            <input id="bulk-quantity" type="number" value="1" formControlName="bulkQuantity">
+          </div>
+  
+          <p>Subtotal: {{form.value.bulkQuantity && getBulkPriceFromSelectedProduct() ? toCurrency(form.value.bulkQuantity! * getBulkPriceFromSelectedProduct()!) : '-'}}</p>
+        </mat-tab>
+      </mat-tab-group>
     }
+    <p style="background-color: yellow;">
+      {{this.converteEmString(this.form.value)}}
+    </p>
+
     <div class="footer-buttons">
       <button mat-stroked-button type="submit">Continuar</button>
     </div>

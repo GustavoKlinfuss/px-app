@@ -1,0 +1,24 @@
+<section class="ncontent">
+  <h1>Pet Klin Rações</h1>
+  @for(item of getCart(); track item){
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{item.product.label}}</mat-card-title>
+        <mat-card-subtitle>{{item.petType}}</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        {{item.weightType}}
+      </mat-card-content>
+      <mat-card-footer>
+        @if(item.weightType == "A Granel") {
+          {{item.bulkQuantity}}
+        }
+        @if(item.weightType == "Saco") {
+          {{item.bagWeight}}
+          {{item.bagQuantity}}
+        }
+        
+      </mat-card-footer>
+    </mat-card>
+  }
+</section>
