@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { OrdersService } from '../shared/orders.service';
 import { Product, Bag, ETipoAnimal, ETipoPesagem, Catalog, CartItem } from '../shared/order.models';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -7,6 +7,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-new-order',
@@ -15,7 +16,8 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     MatTabsModule,
     MatButtonModule,
-    MatSelectModule
+    MatSelectModule,
+    CommonModule
   ],
   templateUrl: './new-order.component.html',
   styleUrl: './new-order.component.scss'
@@ -24,16 +26,27 @@ export class NewOrderComponent {
   private _catalog?: Array<Catalog>;
   
   public form = new FormGroup({
-    petType: new FormControl<ETipoAnimal>(ETipoAnimal.Cachorro),
+    petType: new FormControl<ETipoAnimal>(ETipoAnimal.Cachorro, Validators.required),
     product: new FormControl<Product|null>(null, Validators.required),
-    weightType: new FormControl<ETipoPesagem|null>(null),
-    bag: new FormGroup({
-      weight: new FormControl<number|null>(null),
-      price: new FormControl<number|null>(null),
-    }),
-    bagQuantity: new FormControl<number | null>(null),
+    weightType: new FormControl<ETipoPesagem|null>(null, Validators.required),
+    bag: new FormControl<Bag|null>(null, this.conditionalRequiredBagSelectValidator()),
+    bagQuantity: new FormControl<number | null>(null, this.conditionalRequiredBagQuantityValidator()),
     bulkQuantity: new FormControl<number | null>(null)
   })
+
+  conditionalRequiredBagSelectValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const isInvalid = this.form && this.form.value.weightType == ETipoPesagem.Saco && this.form.controls.bag.value == null;
+      return isInvalid ? {conditionalBagNotInformed: {value: control.value}} : null;
+    };
+  }
+
+  conditionalRequiredBagQuantityValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const isInvalid = this.form && this.form.value.weightType == ETipoPesagem.Saco && this.form.controls.bagQuantity.value == null;
+      return isInvalid ? {conditionalBagQuantityNotInformed: {value: control.value}} : null;
+    };
+  }
 
   constructor(private ordersService: OrdersService, private router: Router){
     ordersService
@@ -77,14 +90,6 @@ export class NewOrderComponent {
     return this.getProductOptions().find(x => x == this.form.value.product)?.bulkPrice;
   }
 
-  onBagSelect(event: Event) {
-    const weight = Number((event.target as HTMLSelectElement).value);
-    this.form.controls.bag.patchValue({
-      weight: weight,
-      price: this.getBagOptions()?.find(x => x.weight === weight)?.price
-    })
-  }
-
   selectWeightType($event: number) {
     const tipoPesagem = this.weightOptions[$event];
     this.form.controls.weightType.setValue(tipoPesagem);
@@ -99,9 +104,9 @@ export class NewOrderComponent {
     }
   }
 
-  onSubmit(){
+  onSubmit() {
+    this.form.markAllAsTouched();
     if (!this.form.valid) {
-      alert('inválido');
       return;
     }
     const raw = this.form.getRawValue();
@@ -110,7 +115,7 @@ export class NewOrderComponent {
       product: raw.product!,
       weightType: raw.weightType!,
       bagQuantity: raw.bagQuantity,
-      bagWeight: raw.bag.weight,
+      bag: raw.bag,
       bulkQuantity: raw.bulkQuantity
     }
     this.ordersService.addItemToCart(cartItem);

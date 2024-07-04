@@ -9,7 +9,14 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class OrdersService {
   private _cart: Array<CartItem> = new Array<CartItem>();
 
-  constructor() { }
+  constructor() {
+    if (this._cart.length == 0)
+    {
+      var cartInStorage = localStorage.getItem('cart');
+      if (cartInStorage != null)
+        this._cart = JSON.parse(cartInStorage);
+    }
+   }
 
   getCatalogToOrder(): Observable<Array<Catalog>|HttpErrorResponse> {
     return of([
@@ -126,10 +133,17 @@ export class OrdersService {
   }
 
   addItemToCart(item: CartItem) : void {
+    localStorage.removeItem('cart');
     this._cart.push(item);
+    localStorage.setItem('cart', JSON.stringify(this._cart));
   }
 
   getCart(): Array<CartItem> {
     return this._cart;
+  }
+
+  clearCart() {
+    localStorage.removeItem('cart');
+    this._cart = new Array<CartItem>;
   }
 }

@@ -35,7 +35,7 @@ export interface CartItem {
   petType: ETipoAnimal,
   product: Product,
   weightType: ETipoPesagem,
-  bagWeight: number | null,
+  bag: Bag | null,
   bagQuantity: number | null,
   bulkQuantity: number | null
 }

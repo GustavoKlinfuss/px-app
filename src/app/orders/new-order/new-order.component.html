@@ -38,18 +38,28 @@
       <mat-tab-group (selectedIndexChange)="selectWeightType($event)">
         <!-- SACOS -->
         <mat-tab [label]="weightOptions[0]">
-          <div class="form-item" formGroupName="bag">
+          <div class="form-item">
             <label for="weight">Peso do saco</label>
-            <mat-select formControlName="weight" required>
+            <div 
+              class="alert" 
+              *ngIf="this.form.controls.bag.touched && this.form.controls.bag.hasError('conditionalBagNotInformed')">
+              Esse campo é obrigatório
+            </div>
+            <mat-select formControlName="bag" >
               <mat-option [value]="null">--</mat-option>
               @for(bag of this.form.value.product?.bags; track bag) {
-                <mat-option [value]="bag.weight">{{bag.weight}} KG por {{toCurrency(bag.price)}}</mat-option>
+                <mat-option [value]="bag">{{bag.weight}} KG por {{toCurrency(bag.price)}}</mat-option>
               }
             </mat-select>
           </div>
             
           <div class="form-item">
             <label for="bag-quantity-input">Quantidade de sacos</label>
+            <div 
+              class="alert" 
+              *ngIf="this.form.controls.bagQuantity.touched && this.form.controls.bagQuantity.hasError('conditionalBagQuantityNotInformed')">
+              Esse campo é obrigatório
+            </div>
             <input id="bag-quantity-input" type="number" value="1" formControlName="bagQuantity">
           </div>
   
