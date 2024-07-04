@@ -5,12 +5,16 @@
 }
 
 .note {
-  border: solid 1px black;
+  border: solid 1px #dddddd;
+  border-radius: 8px;
+  padding: .5rem;
 }
 
-.note-paragraph {
-  margin: 5px;
-  font-size: 1rem;
+.note-section {
+  h3 {
+    font-weight: 500;
+    margin-bottom: 0px;
+  }
 }
 
 .form-item {
@@ -25,10 +29,10 @@
 }
 
 mat-select {
-  border: 1px solid black;
+  border: solid 1px #dddddd;
   border-radius: 8px;
   padding: 4px;
-  width: calc(100% - 8px);
+  width: calc(100% - 12px);
 }
 
 .alert {

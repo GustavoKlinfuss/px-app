@@ -1,18 +1,18 @@
 <section class="ncontent">
-  <h1>Pet Klin Rações</h1>
   <div class="note">
-    <p class="note-paragraph">
-      Entregamos nas regiões Tatuqara, Pinheirinho, ...
-    </p>
-    <p class="note-paragraph">
-      Frete grátis a partir de R$ 50,00
-    </p>
-    <p class="note-paragraph">
-      Pedidos até as 10h, entregas entre 11h~13h do mesmo dia
-    </p>
-    <p class="note-paragraph">
-      Pedidos até as 17h, entregas às 18h~20h do mesmo dia
-    </p>
+    <div class="note-section">
+      <h3>Regiões de entrega</h3>
+      <p>Entregamos nas regiões Tatuqara, Pinheirinho, ...</p>
+    </div>
+    <div class="note-section">
+      <h3>Frete Grátis</h3>
+      <p>Aproveite frete grátis para compras a partir de R$ 50,00</p>
+    </div>
+    <div class="note-section">
+      <h3>Horários de Entrega</h3>
+      <li>Pedidos até as 10h, entregas entre 11h~13h do mesmo dia</li>
+      <li><span>Pedidos até as 17h, entregas às 18h~20h do mesmo dia</span></li>
+    </div>
   </div>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     @if(getCatalog()) {
@@ -75,6 +75,11 @@
             <p>Preço por KG: {{getBulkPriceFromSelectedProduct() ? toCurrency(getBulkPriceFromSelectedProduct()!) : '0'}}</p>
 
             <label for="bulk-quantity">Quantidade em KG</label>
+            <div 
+              class="alert" 
+              *ngIf="this.form.controls.bag.touched && this.form.controls.bag.hasError('conditionalBulkQuantityNotInformed')">
+              Esse campo é obrigatório
+            </div>
             <input id="bulk-quantity" type="number" value="1" formControlName="bulkQuantity">
           </div>
   
@@ -82,9 +87,9 @@
         </mat-tab>
       </mat-tab-group>
     }
-    <p style="background-color: yellow;">
+    <!-- <p style="background-color: yellow;">
       {{this.converteEmString(this.form.value)}}
-    </p>
+    </p> -->
 
     <div class="footer-buttons">
       <button mat-stroked-button type="submit">Continuar</button>

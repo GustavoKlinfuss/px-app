@@ -3,6 +3,7 @@ import { OrdersService } from './shared/orders.service';
 import { CartItem, ETipoPesagem } from './shared/order.models';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-orders',
@@ -17,7 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class OrdersComponent {
   public _cart: Array<CartItem> | null = null;
 
-  constructor(private ordersService: OrdersService){
+  constructor(private ordersService: OrdersService, private router: Router){
     this._cart = ordersService.getCart();
   }
 
@@ -25,7 +26,7 @@ export class OrdersComponent {
     return this._cart ?? new Array<CartItem>;
   }
 
-  toCurrency(value: number) : string {
+  toCurrency(value: number): string {
     const formatter = new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
@@ -45,8 +46,16 @@ export class OrdersComponent {
       },0);
   }
 
-  onClear() {
+  getDeliveryTax(): number {
+    return this.getCartSum() >= 50 ? 0 : 5;
+  }
+
+  onClear(): void {
     this.ordersService.clearCart();
     this._cart = new Array<CartItem>();
+  }
+
+  addNewItem(): void {
+    this.router.navigate(['pedidos/novo'])
   }
 }

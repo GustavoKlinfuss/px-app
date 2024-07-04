@@ -31,20 +31,27 @@ export class NewOrderComponent {
     weightType: new FormControl<ETipoPesagem|null>(null, Validators.required),
     bag: new FormControl<Bag|null>(null, this.conditionalRequiredBagSelectValidator()),
     bagQuantity: new FormControl<number | null>(null, this.conditionalRequiredBagQuantityValidator()),
-    bulkQuantity: new FormControl<number | null>(null)
+    bulkQuantity: new FormControl<number | null>(null, this.conditionalRequiredBulkQuantityValidator())
   })
 
   conditionalRequiredBagSelectValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const isInvalid = this.form && this.form.value.weightType == ETipoPesagem.Saco && this.form.controls.bag.value == null;
+      const isInvalid = this.form && this.form.controls.weightType.value == ETipoPesagem.Saco && this.form.controls.bag.value == null;
       return isInvalid ? {conditionalBagNotInformed: {value: control.value}} : null;
     };
   }
 
   conditionalRequiredBagQuantityValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const isInvalid = this.form && this.form.value.weightType == ETipoPesagem.Saco && this.form.controls.bagQuantity.value == null;
+      const isInvalid = this.form && this.form.controls.weightType.value == ETipoPesagem.Saco && this.form.controls.bagQuantity.value == null;
       return isInvalid ? {conditionalBagQuantityNotInformed: {value: control.value}} : null;
+    };
+  }
+
+  conditionalRequiredBulkQuantityValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const isInvalid = this.form && this.form.controls.weightType.value == ETipoPesagem.AGranel && this.form.controls.bulkQuantity.value == null;
+      return isInvalid ? {conditionalBulkQuantityNotInformed: {value: control.value}} : null;
     };
   }
 
@@ -94,14 +101,16 @@ export class NewOrderComponent {
     const tipoPesagem = this.weightOptions[$event];
     this.form.controls.weightType.setValue(tipoPesagem);
     if (tipoPesagem == ETipoPesagem.AGranel){
-      this.form.controls.bag.reset();
-      this.form.controls.bagQuantity.reset();
-      this.form.controls.bulkQuantity.setValue(1);
+      if (!this.form.controls.bulkQuantity.value)
+        this.form.controls.bulkQuantity.setValue(1);
     }
     else{
-      this.form.controls.bulkQuantity.reset();
-      this.form.controls.bagQuantity.setValue(1);
+      if (!this.form.controls.bagQuantity.value)
+        this.form.controls.bagQuantity.setValue(1);
     }
+    this.form.controls.bag.updateValueAndValidity();
+    this.form.controls.bagQuantity.updateValueAndValidity();
+    this.form.controls.bulkQuantity.updateValueAndValidity();
   }
 
   onSubmit() {

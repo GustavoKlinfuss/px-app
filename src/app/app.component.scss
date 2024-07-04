@@ -1,11 +1,23 @@
 main {
   height: 100%;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: start;
+}
+
+#main-header {
+  background-color: #1976D2;
+  color: white;
+  padding: 1rem;
+  margin: 0px;
+
+  h1 {
+    margin: 0px;
+  }
 }
 
 .content {
   display: flex;
   width: 100%;
-  max-width: 700px;
+  max-width: 560px;
 }

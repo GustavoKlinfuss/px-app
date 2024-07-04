@@ -1,55 +1,69 @@
 <section class="ncontent">
   <h1>Pet Klin Rações</h1>
-    <div id="cart-content">
-      <div class="cart-content-header">
-        <h2>Seu carrinho</h2>
-        <button mat-stroked-button (click)="onClear()">LimparCarrinho</button>
-      </div>
-      
-      @for(item of getCart(); track item){
-        @if(item.weightType == "A Granel") {
-          @if (item.product.bulkPrice && item.bulkQuantity){
-            <mat-card appearance="outlined">
-              <mat-card-header>
-                <mat-card-title>{{item.product.label}} - {{item.petType}}</mat-card-title>
-                <mat-card-subtitle>{{item.weightType}}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                {{item.bulkQuantity}} KG<br>
-                Preço por KG: {{toCurrency(item.product.bulkPrice)}}
-              </mat-card-content>
-              <mat-card-footer>
-                <p>Total:</p>
-                <p>{{toCurrency(item.bulkQuantity * item.product.bulkPrice)}}</p>
-              </mat-card-footer>
-            </mat-card>
-          }
-          @else {
-            <mat-card appearance="outlined"><mat-card-header>Houve um problema ao carregar esse item</mat-card-header></mat-card>
-          }
+  <div id="cart-content">
+    <div id="cart-content-header">
+      <h2>Seu carrinho</h2>
+      <button mat-stroked-button (click)="onClear()">LimparCarrinho</button>
+    </div>
+    
+    @for(item of getCart(); track item){
+      @if(item.weightType == "A Granel") {
+        @if (item.product.bulkPrice && item.bulkQuantity){
+          <mat-card appearance="outlined">
+            <mat-card-header>
+              <mat-card-title>{{item.product.label}} - {{item.petType}}</mat-card-title>
+              <mat-card-subtitle>{{item.weightType}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              {{item.bulkQuantity}} KG<br>
+              Preço por KG: {{toCurrency(item.product.bulkPrice)}}
+            </mat-card-content>
+            <mat-card-footer>
+              <p>Total:</p>
+              <p>{{toCurrency(item.bulkQuantity * item.product.bulkPrice)}}</p>
+            </mat-card-footer>
+          </mat-card>
         }
-        @if(item.weightType == "Saco") {
-          @if (item.bag && item.bagQuantity) {
-            <mat-card appearance="outlined">
-              <mat-card-header>
-                <mat-card-title>{{item.product.label}} - {{item.petType}}</mat-card-title>
-                <mat-card-subtitle>{{item.weightType}}</mat-card-subtitle>
-              </mat-card-header>
-              <mat-card-content>
-                {{item.bagQuantity}}x de {{item.bag.weight}} KG<br>
-                Preco por saco do {{item.bag.weight}} KG: {{toCurrency(item.bag.price)}}
-              </mat-card-content>
-              <mat-card-footer>
-                <p>Total:</p>
-                <p>{{toCurrency(item.bagQuantity * item.bag.price)}}</p>
-              </mat-card-footer>
-            </mat-card>
-          }
-          @else {
-            <mat-card appearance="outlined"><mat-card-header>Houve um problema ao carregar esse item</mat-card-header></mat-card>
-          }
+        @else {
+          <mat-card appearance="outlined"><mat-card-header>Houve um problema ao carregar esse item</mat-card-header></mat-card>
         }
       }
-      <h2>Valor Total: {{toCurrency(getCartSum())}}</h2>
+      @if(item.weightType == "Saco") {
+        @if (item.bag && item.bagQuantity) {
+          <mat-card appearance="outlined">
+            <mat-card-header>
+              <mat-card-title>{{item.product.label}} - {{item.petType}}</mat-card-title>
+              <mat-card-subtitle>{{item.weightType}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              {{item.bagQuantity}}x de {{item.bag.weight}} KG<br>
+              Preco por saco do {{item.bag.weight}} KG: {{toCurrency(item.bag.price)}}
+            </mat-card-content>
+            <mat-card-footer>
+              <p>Total:</p>
+              <p>{{toCurrency(item.bagQuantity * item.bag.price)}}</p>
+            </mat-card-footer>
+          </mat-card>
+        }
+        @else {
+          <mat-card appearance="outlined"><mat-card-header>Houve um problema ao carregar esse item</mat-card-header></mat-card>
+        }
+      }
+    }
+    <div id="cart-content-footer">
+      <div class="flex-col">
+        <label>Valor do Pedido:</label>
+        <label>Valor da entrega:</label>
+        <label>Valor Total:</label>
+      </div>
+      <div class="flex-col">
+        <label>{{toCurrency(getCartSum())}}</label>
+        <label>{{toCurrency(getDeliveryTax())}}</label>
+        <label>{{toCurrency(getCartSum() + getDeliveryTax())}}</label>
+      </div>
     </div>
+  </div>
+  <div id="sub-cart-panel">
+    <button mat-stroked-button (click)="addNewItem()">Continuar comprando</button>
+  </div>
 </section>

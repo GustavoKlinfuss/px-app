@@ -18,3 +18,27 @@ mat-card-footer {
   border: solid 1px;
   gap: 4px;
 }
+
+#cart-content-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#cart-content-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  gap: 1rem;
+}
+
+#sub-cart-panel {
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
