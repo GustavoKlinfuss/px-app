@@ -1,21 +1,21 @@
 import { Component } from '@angular/core';
-import { OrdersService } from './shared/orders.service';
-import { CartItem, ETipoPesagem } from './shared/order.models';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { CartItem, ETipoPesagem } from '../shared/order.models';
+import { OrdersService } from '../shared/orders.service';
 
 @Component({
-  selector: 'app-orders',
+  selector: 'order-cart',
   standalone: true,
   imports: [
     MatCardModule,
     MatButtonModule
   ],
-  templateUrl: './orders.component.html',
-  styleUrl: './orders.component.scss'
+  templateUrl: './order-cart.component.html',
+  styleUrl: './order-cart.component.scss'
 })
-export class OrdersComponent {
+export class OrderCartComponent {
   public _cart: Array<CartItem> | null = null;
 
   constructor(private ordersService: OrdersService, private router: Router){
@@ -57,5 +57,9 @@ export class OrdersComponent {
 
   addNewItem(): void {
     this.router.navigate(['pedidos/novo'])
+  }
+
+  advanceToNextStep(): void {
+    this.router.navigate(['pedidos/informacoes-complementares'])
   }
 }

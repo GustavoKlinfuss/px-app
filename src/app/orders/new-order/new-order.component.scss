@@ -17,24 +17,6 @@
   }
 }
 
-.form-item {
-  display: flex;
-  flex-direction: column;
-}
-
-.footer-buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-}
-
-mat-select {
-  border: solid 1px #dddddd;
-  border-radius: 8px;
-  padding: 4px;
-  width: calc(100% - 12px);
-}
-
 .alert {
   color: red;
 }

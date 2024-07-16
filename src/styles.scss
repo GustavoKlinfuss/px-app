@@ -7,9 +7,27 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif; 
 }
 
-.ncontent {
+.section-content {
   padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.form-item {
+  display: flex;
+  flex-direction: column;
+}
+
+mat-select {
+  border: solid 1px #dddddd;
+  border-radius: 8px;
+  padding: 4px;
+  max-width: calc(100% - 12px) !important;
+}
+
+.footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }

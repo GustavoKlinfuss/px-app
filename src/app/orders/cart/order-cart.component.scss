@@ -15,8 +15,9 @@ mat-card-footer {
   display: flex;
   flex-direction: column;
   padding: .5rem;
-  border: solid 1px;
   gap: 4px;
+  border: solid 1px #dddddd;
+  border-radius: 8px;
 }
 
 #cart-content-header {
