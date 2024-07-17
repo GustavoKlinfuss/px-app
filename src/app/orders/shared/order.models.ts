@@ -39,3 +39,9 @@ export interface CartItem {
   bagQuantity: number | null,
   bulkQuantity: number | null
 }
+
+export enum ETipoPagamento {
+  Dinheiro = "Dinheiro",
+  CartaoCredito = "Cartão de Crédito",
+  CartaoDebito = "Cartão de Débito"
+}
