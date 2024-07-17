@@ -41,6 +41,7 @@ export interface CartItem {
 }
 
 export enum ETipoPagamento {
+  Indefinido = "Indefinido",
   Dinheiro = "Dinheiro",
   CartaoCredito = "Cartão de Crédito",
   CartaoDebito = "Cartão de Débito"
