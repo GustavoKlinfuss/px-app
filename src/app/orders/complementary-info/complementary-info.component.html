@@ -1,43 +1,115 @@
 <section class="section-content">
   @if(!isLoading) {
     <form [formGroup]="form">
-      <div class="form-item">
+      <!-- <div class="form-item">
         <label>Nome</label>
+        <div 
+          class="alert" 
+          *ngIf="this.form.controls.name.touched && this.form.controls.name.hasError('required')">
+          Esse campo é obrigatório
+        </div>
         <input formControlName="name"/>
       </div>
-
+      
       <div class="form-item">
         <label>Telefone</label>
+        <div 
+          class="alert" 
+          *ngIf="this.form.controls.phone.touched && this.form.controls.phone.hasError('required')">
+          Esse campo é obrigatório
+        </div>
         <input formControlName="phone"/>
       </div>
 
       <div class="form-item">
         <label>CEP</label>
+        <div 
+          class="alert" 
+          *ngIf="this.form.controls.zipCode.touched && this.form.controls.zipCode.hasError('required')">
+          Esse campo é obrigatório
+        </div>
         <input formControlName="zipCode"/>
       </div>
 
       <div class="form-item">
         <label>Rua</label>
+        <div 
+          class="alert" 
+          *ngIf="this.form.controls.street.touched && this.form.controls.street.hasError('required')">
+          Esse campo é obrigatório
+        </div>
         <input formControlName="street"/>
       </div>
 
       <div class="form-item">
         <label>Número</label>
+        <div 
+          class="alert" 
+          *ngIf="this.form.controls.numberInStreet.touched && this.form.controls.numberInStreet.hasError('required')">
+          Esse campo é obrigatório
+        </div>
         <input formControlName="numberInStreet"/>
       </div>
 
       <div class="form-item">
         <label>Bairro</label>
+        <div 
+          class="alert" 
+          *ngIf="this.form.controls.neighborhood.touched && this.form.controls.neighborhood.hasError('required')">
+          Esse campo é obrigatório
+        </div>
         <input formControlName="neighborhood"/>
       </div>
 
       <div class="form-item">
         <label>Complemento</label>
+        <div 
+          class="alert" 
+          *ngIf="this.form.controls.complement.touched && this.form.controls.complement.hasError('required')">
+          Esse campo é obrigatório
+        </div>
         <input formControlName="complement"/>
-      </div>
+      </div> -->
+
+      <mat-form-field class="form-item">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name">
+        <!-- @if (this.form.controls.name.touched && this.form.controls.name.hasError('required')) {<mat-error>Nome é obrigatório</mat-error>} -->
+      </mat-form-field>
+
+      <mat-form-field class="form-item">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="phone" placeholder="Ex: (41) 91234-5678">
+        <!-- @if (this.form.controls.phone.touched && this.form.controls.phone.hasError('required')) {<mat-error>Telefone é obrigatório</mat-error>} -->
+      </mat-form-field>
+
+      <mat-form-field class="form-item">
+        <mat-label>CEP</mat-label>
+        <input matInput formControlName="zipCode">
+        <!-- @if (this.form.controls.zipCode.touched && this.form.controls.zipCode.hasError('required')) {<mat-error>CEP é obrigatório</mat-error>} -->
+      </mat-form-field>
+
+      <mat-form-field class="form-item">
+        <mat-label>Rua</mat-label>
+        <input matInput formControlName="street">
+      </mat-form-field>
+
+      <mat-form-field class="form-item">
+        <mat-label>Número</mat-label>
+        <input matInput formControlName="numberInStreet">
+      </mat-form-field>
+
+      <mat-form-field class="form-item">
+        <mat-label>Bairro</mat-label>
+        <input matInput formControlName="neighborhood">
+      </mat-form-field>
+
+      <mat-form-field class="form-item">
+        <mat-label>Complemento</mat-label>
+        <input matInput formControlName="complement" placeholder="Ex: Casa, Bloco 23 - AP 200">
+      </mat-form-field>
 
       <div class="form-item">
-        <label>Maio de pagamento</label>
         <mat-select formControlName="paymentMethod" required>
           @for(paymentOption of getPaymentOptions(); track paymentOption){
             <mat-option [value]="paymentOption">{{paymentOption.toString()}}</mat-option>
@@ -46,7 +118,7 @@
       </div>
     </form>
     <div class="footer">
-      <button mat-stroked-button (click)="advanceToNextStep()">Continuar</button>
+      <button mat-stroked-button (click)="advanceToNextStep()">Confirmar no WhatsApp!</button>
     </div>
   }
 </section>

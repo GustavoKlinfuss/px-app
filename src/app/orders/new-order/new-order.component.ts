@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { OrdersService } from '../shared/orders.service';
 import { Product, Bag, ETipoAnimal, ETipoPesagem, Catalog, CartItem } from '../shared/order.models';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -8,22 +8,30 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { MatSelectModule } from '@angular/material/select';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-new-order',
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    FormsModule,
     MatTabsModule,
     MatButtonModule,
     MatSelectModule,
-    CommonModule
+    CommonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './new-order.component.html',
   styleUrl: './new-order.component.scss'
 })
 export class NewOrderComponent {
   private _catalog?: Array<Catalog>;
+  public hasCart: Boolean = false;
   
   public form = new FormGroup({
     petType: new FormControl<ETipoAnimal>(ETipoAnimal.Cachorro, Validators.required),
@@ -43,8 +51,14 @@ export class NewOrderComponent {
 
   conditionalRequiredBagQuantityValidator(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const isInvalid = this.form && this.form.controls.weightType.value == ETipoPesagem.Saco && this.form.controls.bagQuantity.value == null;
-      return isInvalid ? {conditionalBagQuantityNotInformed: {value: control.value}} : null;
+      const shouldbeValidated = this.form && this.form.controls.weightType.value == ETipoPesagem.Saco;
+      if (!shouldbeValidated) return null;
+
+      console.log({control});
+
+      const isNumeric = (x: string) => /^[+-]?\d+(\.\d+)?$/.test(x);
+
+      return !isNumeric(control.value) || control.value <= 0 ?  {conditionalBagQuantityNotInformed: {value: control.value}} : null;
     };
   }
 
@@ -66,6 +80,8 @@ export class NewOrderComponent {
         this.selectWeightType(0);
         console.log({catalog: this._catalog})
       });
+
+    this.hasCart = ordersService.getCart().length > 0;
   }
 
   public weightOptions = [ ETipoPesagem.Saco, ETipoPesagem.AGranel ];
@@ -128,6 +144,10 @@ export class NewOrderComponent {
       bulkQuantity: raw.bulkQuantity
     }
     this.ordersService.addItemToCart(cartItem);
+    this.router.navigate(['/pedidos']);
+  }
+
+  redirectToCart() {
     this.router.navigate(['/pedidos']);
   }
 

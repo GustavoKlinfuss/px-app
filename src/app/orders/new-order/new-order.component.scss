@@ -17,6 +17,11 @@
   }
 }
 
-.alert {
-  color: red;
+mat-form-field {
+  display: flex;
 }
+
+input {
+  flex: 1
+}
+

@@ -4,13 +4,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { CartItem, ETipoPesagem } from '../shared/order.models';
 import { OrdersService } from '../shared/orders.service';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'order-cart',
   standalone: true,
   imports: [
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatIconModule
   ],
   templateUrl: './order-cart.component.html',
   styleUrl: './order-cart.component.scss'

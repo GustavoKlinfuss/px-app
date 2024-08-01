@@ -43,3 +43,17 @@ mat-card-footer {
   display: flex;
   flex-direction: column;
 }
+
+#cart-content mat-card {
+  mat-card-header {
+    padding-top: 2px;
+  }
+
+  mat-card-footer {
+    padding-bottom: 4px;
+
+    p {
+      margin-bottom: 0px;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CartItem, Catalog, ETipoAnimal } from './order.models';
+import { CartItem, Catalog, ETipoAnimal, PersonalInfo } from './order.models';
 import { Observable, of } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class OrdersService {
   private _cart: Array<CartItem> = new Array<CartItem>();
+  private _personalInfo: PersonalInfo | undefined;
 
   constructor() {
     if (this._cart.length == 0)
@@ -140,6 +141,14 @@ export class OrdersService {
 
   getCart(): Array<CartItem> {
     return this._cart;
+  }
+
+  setPersonalInfo(personalInfo: PersonalInfo): void {
+    this._personalInfo = personalInfo;
+  }
+
+  getPersonalInfo(): PersonalInfo | undefined {
+    return this._personalInfo;
   }
 
   clearCart() {

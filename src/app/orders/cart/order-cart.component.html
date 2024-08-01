@@ -49,23 +49,29 @@
         }
       }
     }
-    <div id="cart-content-footer">
-      <div class="flex-col">
-        <label>Valor do Pedido:</label>
-        <label>Valor da entrega:</label>
-        <label>Valor Total:</label>
-      </div>
-      <div class="flex-col">
-        <label>{{toCurrency(getCartSum())}}</label>
-        <label>{{toCurrency(getDeliveryTax())}}</label>
-        <label>{{toCurrency(getCartSum() + getDeliveryTax())}}</label>
-      </div>
+    <div id="sub-cart-panel">
+      <button mat-stroked-button (click)="addNewItem()">
+        Continuar comprando
+      </button>
     </div>
   </div>
-  <div id="sub-cart-panel">
-    <button mat-stroked-button (click)="addNewItem()">Continuar comprando</button>
+
+  <div id="cart-content-footer">
+    <div class="flex-col">
+      <label>Valor do Pedido:</label>
+      <label>Valor da entrega:</label>
+      <label>Valor Total:</label>
+    </div>
+    <div class="flex-col">
+      <label>{{toCurrency(getCartSum())}}</label>
+      <label>{{toCurrency(getDeliveryTax())}}</label>
+      <label>{{toCurrency(getCartSum() + getDeliveryTax())}}</label>
+    </div>
   </div>
+
   <div class="footer">
-    <button mat-stroked-button (click)="advanceToNextStep()">Continuar</button>
+    <button mat-stroked-button (click)="advanceToNextStep()">
+      <mat-icon fontIcon="arrow_forward"/>
+    </button>
   </div>
 </section>

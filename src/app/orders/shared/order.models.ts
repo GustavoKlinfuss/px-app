@@ -46,3 +46,14 @@ export enum ETipoPagamento {
   CartaoCredito = "Cartão de Crédito",
   CartaoDebito = "Cartão de Débito"
 }
+
+export interface PersonalInfo {
+  name: string,
+  phone: string,
+  zipCode: string,
+  street: string,
+  numberInStreet: number,
+  paymentMethod: ETipoPagamento,
+  neighborhood: string,
+  complement: string
+}
