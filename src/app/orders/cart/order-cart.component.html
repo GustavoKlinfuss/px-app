@@ -2,7 +2,7 @@
   <div id="cart-content">
     <div id="cart-content-header">
       <h2>Seu carrinho</h2>
-      <button mat-stroked-button (click)="onClear()">LimparCarrinho</button>
+      <button mat-stroked-button (click)="onClear()">Limpar Carrinho</button>
     </div>
     
     @for(item of getCart(); track item){
@@ -12,6 +12,9 @@
             <mat-card-header>
               <mat-card-title>{{item.product.label}} - {{item.petType}}</mat-card-title>
               <mat-card-subtitle>{{item.weightType}}</mat-card-subtitle>
+              <mat-card-actions>
+                <mat-icon fontIcon="close" (click)="exclude(item.id)"></mat-icon>
+              </mat-card-actions>
             </mat-card-header>
             <mat-card-content>
               {{item.bulkQuantity}} KG<br>
@@ -33,6 +36,9 @@
             <mat-card-header>
               <mat-card-title>{{item.product.label}} - {{item.petType}}</mat-card-title>
               <mat-card-subtitle>{{item.weightType}}</mat-card-subtitle>
+              <mat-card-actions>
+                  <mat-icon fontIcon="close" (click)="exclude(item.id)"></mat-icon>
+              </mat-card-actions>
             </mat-card-header>
             <mat-card-content>
               {{item.bagQuantity}}x de {{item.bag.weight}} KG<br>

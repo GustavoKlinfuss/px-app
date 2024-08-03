@@ -37,6 +37,7 @@ mat-card-footer {
   display: flex;
   flex-direction: row;
   justify-content: end;
+  gap: 8px;
 }
 
 .flex-col {
@@ -47,6 +48,17 @@ mat-card-footer {
 #cart-content mat-card {
   mat-card-header {
     padding-top: 2px;
+    padding-right: 0px;
+
+    mat-card-actions {
+      align-items: flex-start;
+
+      mat-icon {
+        border: 1px solid crimson;
+        border-radius: 4px;
+        color: black;
+      }
+    }
   }
 
   mat-card-footer {

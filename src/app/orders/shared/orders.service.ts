@@ -155,4 +155,12 @@ export class OrdersService {
     localStorage.removeItem('cart');
     this._cart = new Array<CartItem>;
   }
+
+  removeFromCart(id: string) : void {
+    const cartItem = this._cart.find(x => x.id == id);
+    if (cartItem == null) return;
+    this._cart.splice(this._cart.indexOf(cartItem), 1);
+    localStorage.removeItem('cart');
+    localStorage.setItem('cart', JSON.stringify(this._cart));
+  }
 }

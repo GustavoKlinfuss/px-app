@@ -32,6 +32,7 @@ export interface Bag {
 }
 
 export interface CartItem {
+  id: string,
   petType: ETipoAnimal,
   product: Product,
   weightType: ETipoPesagem,

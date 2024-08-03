@@ -1,10 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { CartItem, ETipoPesagem } from '../shared/order.models';
 import { OrdersService } from '../shared/orders.service';
 import { MatIconModule } from '@angular/material/icon';
+import { ConfirmActionDialogComponent } from '../../../components/confirm-action-dialog/confirm-action-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'order-cart',
@@ -20,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 export class OrderCartComponent {
   public _cart: Array<CartItem> | null = null;
 
-  constructor(private ordersService: OrdersService, private router: Router){
+  constructor(private ordersService: OrdersService, private router: Router, private dialog: MatDialog){
     this._cart = ordersService.getCart();
   }
 
@@ -63,5 +65,22 @@ export class OrderCartComponent {
 
   advanceToNextStep(): void {
     this.router.navigate(['pedidos/informacoes-complementares'])
+  }
+
+  exclude(id: string): void {
+    const dialogRef = this.dialog.open(ConfirmActionDialogComponent, {
+      data: {
+        title: 'Confirmar exclusão',
+        contentText: 'Você deseja excluir esse item do carrinho?'
+      }
+    });
+
+    dialogRef
+      .afterClosed()
+      .subscribe(result => {
+        console.log({result});
+        if (result == true)
+          this.ordersService.removeFromCart(id);
+      })
   }
 }

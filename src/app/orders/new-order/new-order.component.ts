@@ -54,8 +54,6 @@ export class NewOrderComponent {
       const shouldbeValidated = this.form && this.form.controls.weightType.value == ETipoPesagem.Saco;
       if (!shouldbeValidated) return null;
 
-      console.log({control});
-
       const isNumeric = (x: string) => /^[+-]?\d+(\.\d+)?$/.test(x);
 
       return !isNumeric(control.value) || control.value <= 0 ?  {conditionalBagQuantityNotInformed: {value: control.value}} : null;
@@ -135,7 +133,9 @@ export class NewOrderComponent {
       return;
     }
     const raw = this.form.getRawValue();
+    const date = new Date();
     const cartItem: CartItem = {
+      id: `${date.getFullYear()}${date.getMonth()}${date.getDay()}-${raw.product!.id}`,
       petType: raw.petType!,
       product: raw.product!,
       weightType: raw.weightType!,
@@ -149,9 +149,5 @@ export class NewOrderComponent {
 
   redirectToCart() {
     this.router.navigate(['/pedidos']);
-  }
-
-  converteEmString(arg0: any) {
-    return JSON.stringify(arg0, null, "\n");
   }
 }
