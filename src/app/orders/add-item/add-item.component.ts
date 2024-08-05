@@ -26,10 +26,10 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatInputModule
   ],
-  templateUrl: './new-order.component.html',
-  styleUrl: './new-order.component.scss'
+  templateUrl: './add-item.component.html',
+  styleUrl: './add-item.component.scss'
 })
-export class NewOrderComponent {
+export class AddItemComponent {
   private _catalog?: Array<Catalog>;
   public hasCart: Boolean = false;
   
@@ -127,7 +127,7 @@ export class NewOrderComponent {
     this.form.controls.bulkQuantity.updateValueAndValidity();
   }
 
-  onSubmit() {
+  onSubmit() : void {
     this.form.markAllAsTouched();
     if (!this.form.valid) {
       return;

@@ -16,42 +16,37 @@
   </div>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     @if(getCatalog()) {
-      <div class="form-item">
-        <label>Ração para</label>
+      <mat-form-field class="form-item">
+        <mat-label>Ração para</mat-label>
         <mat-select formControlName="petType" required>
           @for(petType of getPetTypeOptions(); track petType) {
             <mat-option [value]="petType">{{petType.toString()}}</mat-option>
           }
         </mat-select>
-      </div>
+      </mat-form-field>
 
-      <div class="form-item">
-        <label>Marca</label>
+      <mat-form-field class="form-item">
+        <mat-label>Marca</mat-label>
         <mat-select formControlName="product" required>
           <mat-option [value]="null">--</mat-option>
           @for(product of getProductOptions(); track product) {
             <mat-option [value]="product">{{product.label}}</mat-option>
           }
         </mat-select>
-      </div>
+      </mat-form-field>
 
       <mat-tab-group (selectedIndexChange)="selectWeightType($event)">
         <!-- SACOS -->
         <mat-tab [label]="weightOptions[0]">
-          <div class="form-item">
-            <label for="weight">Peso do saco</label>
-            <div 
-              class="alert" 
-              *ngIf="this.form.controls.bag.touched && this.form.controls.bag.hasError('conditionalBagNotInformed')">
-              Esse campo é obrigatório
-            </div>
+          <mat-form-field class="form-item">
+            <mat-label>Peso do saco</mat-label>
             <mat-select formControlName="bag" >
               <mat-option [value]="null">--</mat-option>
               @for(bag of this.form.value.product?.bags; track bag) {
                 <mat-option [value]="bag">{{bag.weight}} KG por {{toCurrency(bag.price)}}</mat-option>
               }
             </mat-select>
-          </div>
+          </mat-form-field>
 
           <mat-form-field class="form-item">
             <mat-label>Quantidade de sacos</mat-label>

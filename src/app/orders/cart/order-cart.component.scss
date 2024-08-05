@@ -1,5 +1,4 @@
 :host {
-  border: solid 1px black;
   flex: 1;
   overflow: auto;
 }
@@ -49,6 +48,7 @@ mat-card-footer {
   mat-card-header {
     padding-top: 2px;
     padding-right: 0px;
+    justify-content: space-between;
 
     mat-card-actions {
       align-items: flex-start;

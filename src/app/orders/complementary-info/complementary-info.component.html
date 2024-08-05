@@ -4,19 +4,16 @@
       <mat-form-field class="form-item">
         <mat-label>Nome</mat-label>
         <input matInput formControlName="name">
-        <!-- @if (this.form.controls.name.touched && this.form.controls.name.hasError('required')) {<mat-error>Nome é obrigatório</mat-error>} -->
       </mat-form-field>
 
       <mat-form-field class="form-item">
         <mat-label>Telefone</mat-label>
-        <input matInput formControlName="phone" placeholder="Ex: (41) 91234-5678">
-        <!-- @if (this.form.controls.phone.touched && this.form.controls.phone.hasError('required')) {<mat-error>Telefone é obrigatório</mat-error>} -->
+        <input matInput formControlName="phone" placeholder="Ex: (41) 91234-5678" mask="(00) 00000-0000">
       </mat-form-field>
 
       <mat-form-field class="form-item">
         <mat-label>CEP</mat-label>
-        <input matInput formControlName="zipCode">
-        <!-- @if (this.form.controls.zipCode.touched && this.form.controls.zipCode.hasError('required')) {<mat-error>CEP é obrigatório</mat-error>} -->
+        <input matInput formControlName="zipCode" mask="00000-000">
       </mat-form-field>
 
       <mat-form-field class="form-item">
@@ -26,12 +23,12 @@
 
       <mat-form-field class="form-item">
         <mat-label>Número</mat-label>
-        <input matInput formControlName="numberInStreet">
+        <input matInput type="number" formControlName="numberInStreet">
       </mat-form-field>
 
       <mat-form-field class="form-item">
         <mat-label>Bairro</mat-label>
-        <input matInput formControlName="neighborhood">
+        <input matInput type="text" formControlName="neighborhood">
       </mat-form-field>
 
       <mat-form-field class="form-item">
@@ -39,13 +36,14 @@
         <input matInput formControlName="complement" placeholder="Ex: Casa, Bloco 23 - AP 200">
       </mat-form-field>
 
-      <div class="form-item">
+      <mat-form-field class="form-item">
+        <mat-label>Form de pagamento</mat-label>
         <mat-select formControlName="paymentMethod" required>
           @for(paymentOption of getPaymentOptions(); track paymentOption){
             <mat-option [value]="paymentOption">{{paymentOption.toString()}}</mat-option>
           }
         </mat-select>
-      </div>
+      </mat-form-field>
     </form>
     <div class="footer">
       <button mat-stroked-button (click)="advanceToNextStep()">Confirmar no WhatsApp!</button>
