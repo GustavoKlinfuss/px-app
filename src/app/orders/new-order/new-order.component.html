@@ -52,25 +52,10 @@
               }
             </mat-select>
           </div>
-            
-          <!-- <div class="form-item">
-            <label for="bag-quantity-input">Quantidade de sacos</label>
-            <div 
-              class="alert" 
-              *ngIf="this.form.controls.bagQuantity.touched && this.form.controls.bagQuantity.hasError('conditionalBagQuantityNotInformed')">
-              Esse campo é obrigatório
-            </div>
-            <div 
-              class="alert" 
-              *ngIf="this.form.controls.bagQuantity.touched && this.form.controls.bagQuantity.hasError('conditionalBagQuantityNotNumeric')">
-              Valor inválido
-            </div>
-            <input id="bag-quantity-input" type="number" value="1" formControlName="bagQuantity">
-          </div> -->
 
-          <mat-form-field>
+          <mat-form-field class="form-item">
             <mat-label>Quantidade de sacos</mat-label>
-            <input matInput formControlName="bagQuantity">
+            <input matInput type="number" value="1" formControlName="bagQuantity">
             @if (this.form.controls.bagQuantity.touched && this.form.controls.bagQuantity.hasError('conditionalBagQuantityNotNumeric')){
               <mat-error>Valor inválido</mat-error>
             }
@@ -84,17 +69,14 @@
         </mat-tab>
         <!-- A GRANEL -->
         <mat-tab [label]="weightOptions[1]">
-          <div class="form-item">
-            <p>Preço por KG: {{getBulkPriceFromSelectedProduct() ? toCurrency(getBulkPriceFromSelectedProduct()!) : '0'}}</p>
-
-            <label for="bulk-quantity">Quantidade em KG</label>
-            <div 
-              class="alert" 
-              *ngIf="this.form.controls.bag.touched && this.form.controls.bag.hasError('conditionalBulkQuantityNotInformed')">
-              Esse campo é obrigatório
-            </div>
-            <input id="bulk-quantity" type="number" value="1" formControlName="bulkQuantity">
-          </div>
+          <p>Preço por KG: {{getBulkPriceFromSelectedProduct() ? toCurrency(getBulkPriceFromSelectedProduct()!) : '0'}}</p>
+          <mat-form-field>
+            <mat-label>Quantidade em KG</mat-label>
+            <input matInput type="number" value="1" formControlName="bulkQuantity">
+            @if (this.form.controls.bulkQuantity.touched && this.form.controls.bulkQuantity.hasError('conditionalBulkQuantityNotNumeric')){
+              <mat-error>Valor inválido</mat-error>
+            }
+          </mat-form-field>
   
           <p>Subtotal: {{form.value.bulkQuantity && getBulkPriceFromSelectedProduct() ? toCurrency(form.value.bulkQuantity! * getBulkPriceFromSelectedProduct()!) : '-'}}</p>
         </mat-tab>
