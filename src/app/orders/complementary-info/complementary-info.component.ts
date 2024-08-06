@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { Router } from '@angular/router';
 import { ETipoPagamento, ETipoPesagem, PersonalInfo } from '../shared/order.models';
 import { OrdersService } from '../shared/orders.service';
 import { CommonModule } from '@angular/common';
@@ -38,7 +37,20 @@ export class ComplementaryInfoComponent implements OnInit {
     complement: new FormControl<string>("", Validators.required)
   })
 
-  constructor(private router: Router, private ordersService: OrdersService) {}
+  constructor(private ordersService: OrdersService) {
+    const personalInfo: PersonalInfo|undefined = ordersService.getPersonalInfo();
+    if (personalInfo != undefined)
+    {
+      this.form.controls.name.setValue(personalInfo.name);
+      this.form.controls.phone.setValue(personalInfo.phone);
+      this.form.controls.street.setValue(personalInfo.street);
+      this.form.controls.numberInStreet.setValue(personalInfo.numberInStreet);
+      this.form.controls.neighborhood.setValue(personalInfo.neighborhood);
+      this.form.controls.zipCode.setValue(personalInfo.zipCode);
+      this.form.controls.complement.setValue(personalInfo.complement);
+      this.form.controls.paymentMethod.setValue(personalInfo.paymentMethod);
+    }
+  }
 
   toCurrency(value: number): string {
     const formatter = new Intl.NumberFormat('pt-BR', {
@@ -57,7 +69,7 @@ export class ComplementaryInfoComponent implements OnInit {
     return [ ETipoPagamento.Dinheiro, ETipoPagamento.CartaoCredito, ETipoPagamento.CartaoDebito ]
   }
 
-  advanceToNextStep() : void {
+  submit(): void {
     this.form.markAllAsTouched();
     if (!this.form.valid) {
       return;

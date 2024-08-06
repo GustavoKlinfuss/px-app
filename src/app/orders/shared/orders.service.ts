@@ -11,11 +11,19 @@ export class OrdersService {
   private _personalInfo: PersonalInfo | undefined;
 
   constructor() {
-    if (this._cart.length == 0)
-    {
-      var cartInStorage = localStorage.getItem('cart');
+    if (this._cart.length == 0) {
+      const cartInStorage = localStorage.getItem('cart');
       if (cartInStorage != null)
         this._cart = JSON.parse(cartInStorage);
+    }
+
+    if (this._personalInfo === undefined) {
+      const personalInfoInStorage: string | null = localStorage.getItem('personalInfo');
+      if (personalInfoInStorage != null) {
+        try {
+          this._personalInfo = JSON.parse(personalInfoInStorage);
+        } catch(ex) { }
+      }
     }
    }
 
@@ -145,6 +153,7 @@ export class OrdersService {
 
   setPersonalInfo(personalInfo: PersonalInfo): void {
     this._personalInfo = personalInfo;
+    localStorage.setItem('personalInfo', JSON.stringify(this._personalInfo));
   }
 
   getPersonalInfo(): PersonalInfo | undefined {

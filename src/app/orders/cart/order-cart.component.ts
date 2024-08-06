@@ -22,12 +22,14 @@ import { MatDialog } from '@angular/material/dialog';
 export class OrderCartComponent {
   public _cart: Array<CartItem> | null = null;
 
-  constructor(private ordersService: OrdersService, private router: Router, private dialog: MatDialog){
+  constructor(private ordersService: OrdersService, private router: Router, private dialog: MatDialog) {
     this._cart = ordersService.getCart();
+    if (this._cart.length === 0)
+      this.redirectToAddNewItem();
   }
 
   getCart(): Array<CartItem> {
-    return this._cart ?? new Array<CartItem>;
+    return this._cart ?? [];
   }
 
   toCurrency(value: number): string {
@@ -59,7 +61,7 @@ export class OrderCartComponent {
     this._cart = new Array<CartItem>();
   }
 
-  addNewItem(): void {
+  redirectToAddNewItem(): void {
     this.router.navigate(['pedidos/novo'])
   }
 
